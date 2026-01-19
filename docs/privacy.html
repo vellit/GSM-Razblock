@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Политика конфиденциальности — 2G Разблок</title>
+  <style>
+    :root{
+      --bg:#ffffff;
+      --text:#111827;
+      --muted:#6b7280;
+      --card:#f9fafb;
+      --border:#e5e7eb;
+      --link:#2563eb;
+      --code-bg:#f3f4f6;
+    }
+    @media (prefers-color-scheme: dark){
+      :root{
+        --bg:#0b0f19;
+        --text:#e5e7eb;
+        --muted:#9ca3af;
+        --card:#0f1629;
+        --border:#1f2a44;
+        --link:#60a5fa;
+        --code-bg:#111b33;
+      }
+    }
+    html,body{height:100%}
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      font-family: system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+      line-height:1.65;
+    }
+    .wrap{
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 34px 20px 64px;
+    }
+    header h1{
+      margin: 0 0 8px;
+      font-size: clamp(28px, 3vw, 40px);
+      line-height:1.15;
+      letter-spacing:-0.02em;
+    }
+    .meta{
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .toc{
+      margin-top: 18px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 16px;
+    }
+    .toc strong{display:block;margin-bottom:6px}
+    .toc a{
+      color: var(--link);
+      text-decoration: none;
+      display:inline-block;
+      margin: 6px 12px 0 0;
+    }
+    .toc a:hover{text-decoration: underline}
+    h2{
+      margin: 28px 0 10px;
+      font-size: 20px;
+      line-height:1.25;
+    }
+    p{margin: 10px 0}
+    ul{margin: 10px 0 10px 18px; padding:0}
+    li{margin: 6px 0}
+    code{
+      padding: 0.12rem 0.35rem;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+      font-size: 0.95em;
+      white-space: nowrap;
+    }
+    a{color:var(--link)}
+    hr{
+      border:0;
+      border-top: 1px solid var(--border);
+      margin: 24px 0;
+    }
+    footer{
+      margin-top: 28px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .pill{
+      display:inline-block;
+      padding: 4px 10px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--card);
+      color: var(--muted);
+      font-size: 12px;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="wrap">
+    <header>
+      <h1>Политика конфиденциальности</h1>
+      <p class="meta">
+        Приложение: «2G Разблок» (ru.vellit.gsm2g)
+        <span class="pill">Последнее обновление: <time datetime="2026-01-18">18 января 2026</time></span>
+      </p>
+
+      <nav class="toc" aria-label="Содержание">
+        <strong>Содержание</strong>
+        <a href="#who">Кто мы</a>
+        <a href="#data">Какие данные обрабатываются</a>
+        <a href="#purpose">Цели использования данных</a>
+        <a href="#storage">Хранение и передача</a>
+        <a href="#security">Безопасность</a>
+        <a href="#rights">Права пользователя</a>
+        <a href="#changes">Изменения в политике</a>
+        <a href="#contacts">Контакты</a>
+      </nav>
+    </header>
+
+    <section id="who">
+      <h2>Кто мы</h2>
+      <p><strong>Разработчик:</strong> Vellit</p>
+      <p><strong>Контакт для поддержки:</strong> <a href="mailto:gsmrazblock@gmail.com">gsmrazblock@gmail.com</a></p>
+    </section>
+
+    <section id="data">
+      <h2>Какие данные обрабатываются</h2>
+      <ul>
+        <li>
+          <strong>Локальные данные на устройстве:</strong>
+          список выбранных пользователем приложений (белый список) и настройки напоминаний.
+          Хранятся только на устройстве, не отправляются на сервер.
+        </li>
+
+        <li>
+          <strong>Системные разрешения:</strong>
+          <ul>
+            <li>
+              Доступ к статистике использования (<code>PACKAGE_USAGE_STATS</code>) —
+              используется для определения активного приложения, чтобы показать напоминание.
+            </li>
+            <li>
+              Уведомления (<code>POST_NOTIFICATIONS</code>) —
+              используются для показа напоминаний.
+            </li>
+          </ul>
+        </li>
+
+        <li>
+          <strong>Не собираем и не передаём:</strong>
+          персональные данные, учётные записи, историю звонков, местоположение, содержимое файлов, сеть и т.д.
+        </li>
+      </ul>
+    </section>
+
+    <section id="purpose">
+      <h2>Цели использования данных</h2>
+      <ul>
+        <li>Показывать напоминание вернуться к обычному режиму сети, когда активировано приложение из белого списка.</li>
+        <li>Открывать системное меню Phone Info по кнопке.</li>
+      </ul>
+    </section>
+
+    <section id="storage">
+      <h2>Хранение и передача</h2>
+      <ul>
+        <li>Все данные хранятся локально на устройстве и удаляются при удалении приложения или очистке его данных.</li>
+        <li>Данные не передаются третьим лицам и не отправляются на внешние серверы.</li>
+      </ul>
+    </section>
+
+    <section id="security">
+      <h2>Безопасность</h2>
+      <ul>
+        <li>
+          Приложение не использует шифрование для локально хранимых данных, так как данные не покидают устройство.
+        </li>
+        <li>Рекомендуется не использовать приложение на взломанных/рутованных устройствах.</li>
+      </ul>
+    </section>
+
+    <section id="rights">
+      <h2>Права пользователя</h2>
+      <ul>
+        <li>Вы можете в любой момент отозвать разрешения в настройках системы (Usage Access, уведомления).</li>
+        <li>Вы можете удалить или изменить белый список в настройках приложения.</li>
+        <li>Вы можете удалить приложение, чтобы стереть все локальные данные.</li>
+      </ul>
+    </section>
+
+    <section id="changes">
+      <h2>Изменения в политике</h2>
+      <p>
+        Обновления политики будут публиковаться по тому же URL. Дата последнего обновления указана выше.
+      </p>
+    </section>
+
+    <section id="contacts">
+      <h2>Контакты</h2>
+      <p>По вопросам приватности: <a href="mailto:gsmrazblock@gmail.com">gsmrazblock@gmail.com</a></p>
+    </section>
+
+    <footer>
+      <div>© Vellit</div>
+    </footer>
+  </main>
+</body>
+</html>

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="whitelist_item_height_guess">88dp</dimen>
+</resources>

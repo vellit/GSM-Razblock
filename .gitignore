@@ -1,0 +1,17 @@
+# Sensitive signing materials
+keystore.properties
+cert/keystore.properties
+cert/release-keystore.jks
+*.jks
+cert/upload-cert.zip
+cert/
+resources/
+wrapper/
+.gradle/
+.android/
+app/build/
+app/build-out/
+app/build-out-new/
+
+# Local tools/exports not needed in VCS
+cert/pepk.jar
