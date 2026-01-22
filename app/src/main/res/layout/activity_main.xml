@@ -95,14 +95,6 @@
                 app:iconPadding="12dp" />
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="12dp"
-            android:background="@color/colorOnSurfaceVariant"
-            android:alpha="0.2" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -110,6 +102,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/whitelistTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/whitelist_title"
@@ -147,65 +140,10 @@
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
             android:textColor="?attr/colorError" />
 
-        <LinearLayout
-            android:id="@+id/usagePermissionGroup"
+        <Space
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:orientation="vertical"
-            android:padding="8dp"
-            android:background="@android:color/transparent"
-            android:visibility="gone">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/usage_permission_needed"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                android:textColor="@color/colorOnSurfaceVariant"
-                android:textAlignment="viewStart" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/usagePermissionButton"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="@string/grant_usage_permission"
-                app:icon="@drawable/ic_settings"
-                app:iconGravity="textStart"
-                app:iconPadding="8dp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/notificationsPermissionGroup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="vertical"
-            android:padding="8dp"
-            android:background="@android:color/transparent"
-            android:visibility="gone">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/notifications_permission_needed"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                android:textColor="@color/colorOnSurfaceVariant"
-                android:textAlignment="viewStart" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/notificationsPermissionButton"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="@string/grant_notifications"
-                app:icon="@drawable/ic_settings"
-                app:iconGravity="textStart"
-                app:iconPadding="8dp" />
-        </LinearLayout>
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/privacyLink"

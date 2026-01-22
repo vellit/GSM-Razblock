@@ -22,6 +22,7 @@ import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.annotation.VisibleForTesting
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.edit
@@ -50,6 +51,14 @@ class MainActivity : AppCompatActivity() {
     private val actionReturn = "dev.radioinfo.liteonly.ACTION_RETURN"
     private val actionStay = "dev.radioinfo.liteonly.ACTION_STAY"
     private val promptCooldownMs = 5 * 60_000L
+
+    @VisibleForTesting
+    companion object {
+        var testTopPackage: String? = null
+        var lastNotifiedPackageTest: String? = null
+        var testBypassUsageAccess: Boolean = false
+        var testBypassNotifications: Boolean = false
+    }
 
     private val notificationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -140,8 +149,6 @@ class MainActivity : AppCompatActivity() {
         binding.retryButton.setOnClickListener { openRadioInfo(manual = true) }
         binding.dialerButton.setOnClickListener { openDialerCode() }
         binding.settingsButton.setOnClickListener { openSystemSettings() }
-        binding.usagePermissionButton.setOnClickListener { openUsageAccessSettings() }
-        binding.notificationsPermissionButton.setOnClickListener { requestNotificationPermission() }
         binding.openRadioInfoButton.setOnClickListener { openRadioInfo(manual = true) }
         binding.privacyLink.setOnClickListener { openPrivacyPolicy() }
 
@@ -149,8 +156,8 @@ class MainActivity : AppCompatActivity() {
 
         setupWhitelist()
         createNotificationChannel()
-        maybePromptInitialPermissions()
-        ensureNotificationPermission(autoRequest = true)
+        ensureNotificationPermission(autoRequest = false)
+        refreshPermissionSection()
         startMonitoringForeground()
         handleIntent(intent)
     }
@@ -163,6 +170,7 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         ensureNotificationPermission()
+        refreshPermissionSection()
     }
 
     override fun onDestroy() {
@@ -487,6 +495,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun hasUsageAccess(): Boolean {
+        if (testBypassUsageAccess) return true
         val appOps = getSystemService(Context.APP_OPS_SERVICE) as android.app.AppOpsManager
         val mode = appOps.checkOpNoThrow(
             "android:get_usage_stats",
@@ -505,25 +514,6 @@ class MainActivity : AppCompatActivity() {
             startActivity(directIntent)
         } catch (_: Exception) {
             startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
-        }
-    }
-
-    private fun maybePromptInitialPermissions() {
-        val prompted = whitelistPrefs.getBoolean("initial_permissions_prompted", false)
-        if (prompted) return
-        whitelistPrefs.edit { putBoolean("initial_permissions_prompted", true) }
-
-        val needsUsage = !hasUsageAccess()
-        val needsNotifications = !hasNotificationPermission()
-
-        if (needsUsage) {
-            showUsagePermissionDialog {
-                if (!hasNotificationPermission()) {
-                    showNotificationsPermissionDialog()
-                }
-            }
-        } else if (needsNotifications) {
-            showNotificationsPermissionDialog()
         }
     }
 
@@ -566,21 +556,36 @@ class MainActivity : AppCompatActivity() {
     private fun ensureNotificationPermission(autoRequest: Boolean = false) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             val enabled = hasNotificationPermission()
-            binding.notificationsPermissionGroup.isVisible = !enabled
-
             if (!enabled && autoRequest && !notificationsRequested) {
                 notificationsRequested = true
                 notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
         } else {
-            binding.notificationsPermissionGroup.isVisible = false
+            notificationsRequested = true
         }
+        refreshPermissionSection()
     }
 
     private fun updateNotificationPermissionUi(granted: Boolean) {
         val enabled = granted || hasNotificationPermission()
-        binding.notificationsPermissionGroup.isVisible =
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !enabled
+        notificationsRequested = notificationsRequested || granted
+        refreshPermissionSection()
+    }
+
+    private fun refreshPermissionSection() {
+        val needsUsage = !hasUsageAccess()
+        val needsNotifications =
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                !hasNotificationPermission() &&
+                !testBypassNotifications
+        val anyNeeded = needsUsage || needsNotifications
+
+        binding.openWhitelistButton.text = getString(
+            if (anyNeeded) R.string.activate else R.string.open_whitelist
+        )
+        binding.whitelistTitle.text = getString(
+            if (!anyNeeded) R.string.whitelist_title_active else R.string.whitelist_title_inactive
+        )
     }
 
     private fun defaultModeSuggestion(): String {
@@ -664,13 +669,15 @@ class MainActivity : AppCompatActivity() {
         monitorHandler.removeCallbacks(monitorRunnable)
     }
 
+    @VisibleForTesting
+    fun runMonitorForTest() {
+        monitorForeground()
+    }
+
     private fun monitorForeground() {
         if (!hasUsageAccess()) {
-            binding.usagePermissionGroup.isVisible = true
             cancelNotification()
             return
-        } else {
-            binding.usagePermissionGroup.isVisible = false
         }
 
         val currentPackage = getTopPackage() ?: return
@@ -699,6 +706,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getTopPackage(): String? {
+        testTopPackage?.let { return it }
+
         val usm = getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
         val end = System.currentTimeMillis()
         val start = end - 10_000
@@ -716,6 +725,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun showReturnNotification(entry: WhitelistEntry) {
         val nm = NotificationManagerCompat.from(this)
+        lastNotifiedPackageTest = entry.packageName
         val returnIntent = PendingIntent.getActivity(
             this,
             1,
@@ -755,6 +765,15 @@ class MainActivity : AppCompatActivity() {
             .build()
 
         nm.notify(1010, notification)
+    }
+
+    @VisibleForTesting
+    fun clearTestState() {
+        testTopPackage = null
+        lastNotifiedPackageTest = null
+        testBypassUsageAccess = false
+        promptTimestamps.clear()
+        lastPromptPackage = null
     }
 
     private fun cancelNotification() {

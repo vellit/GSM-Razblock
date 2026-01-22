@@ -27,6 +27,7 @@ android {
         versionCode = 3
         versionName = "1.1.1"
         setProperty("archivesBaseName", "2GRazblock")
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     signingConfigs {
@@ -61,10 +62,57 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
+
+    testOptions {
+        managedDevices {
+            devices {
+                maybeCreate<com.android.build.api.dsl.ManagedVirtualDevice>("pixel4Api30").apply {
+                    device = "Pixel 4"
+                    apiLevel = 30
+                    systemImageSource = "google_apis"
+                }
+                maybeCreate<com.android.build.api.dsl.ManagedVirtualDevice>("pixel6Api33").apply {
+                    device = "Pixel 6"
+                    apiLevel = 33
+                    systemImageSource = "google_apis"
+                }
+                maybeCreate<com.android.build.api.dsl.ManagedVirtualDevice>("pixel3aApi31").apply {
+                    device = "Pixel 3a"
+                    apiLevel = 31
+                    systemImageSource = "google_apis"
+                }
+                maybeCreate<com.android.build.api.dsl.ManagedVirtualDevice>("pixel6aApi34").apply {
+                    device = "Pixel 6a"
+                    apiLevel = 34
+                    systemImageSource = "google_apis"
+                }
+                maybeCreate<com.android.build.api.dsl.ManagedVirtualDevice>("pixelCApi30").apply {
+                    device = "Pixel C"
+                    apiLevel = 30
+                    systemImageSource = "google_apis"
+                }
+            }
+            groups {
+                maybeCreate("ciGroup").apply {
+                    targetDevices.addAll(
+                        listOf(
+                            devices["pixel4Api30"],
+                            devices["pixel6Api33"],
+                            devices["pixel3aApi31"],
+                            devices["pixel6aApi34"],
+                            devices["pixelCApi30"]
+                        )
+                    )
+                }
+            }
+        }
+    }
 }
 
 dependencies {
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 }
