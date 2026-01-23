@@ -848,7 +848,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateToggleButton() {
-        val canShow = hasNotificationPermission() || testBypassNotifications
+        val usageOk = hasUsageAccess()
+        val notificationsOk = hasNotificationPermission() || testBypassNotifications
+        val canShow = usageOk && notificationsOk
         binding.toggleNotificationsButton.isVisible = canShow
         binding.toggleNotificationsButton.text = getString(
             if (isNotificationsDisabled()) R.string.enable_notifications else R.string.disable_notifications

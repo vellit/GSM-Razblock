@@ -24,8 +24,8 @@ android {
         applicationId = "ru.vellit.gsm2g"
         minSdk = 30
         targetSdk = 34
-        versionCode = 3
-        versionName = "1.1.1"
+        versionCode = 4
+        versionName = "1.1.2"
         setProperty("archivesBaseName", "2GRazblock")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
