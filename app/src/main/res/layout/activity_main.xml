@@ -130,6 +130,18 @@
             app:iconGravity="textStart"
             app:iconPadding="12dp" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/toggleNotificationsButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/disable_notifications"
+            android:visibility="gone"
+            app:icon="@drawable/ic_settings"
+            app:iconGravity="textStart"
+            app:iconPadding="12dp" />
+
         <TextView
             android:id="@+id/warningText"
             android:layout_width="match_parent"

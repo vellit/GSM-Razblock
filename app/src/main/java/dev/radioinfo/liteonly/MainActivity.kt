@@ -43,6 +43,9 @@ class MainActivity : AppCompatActivity() {
     private var lastPromptPackage: String? = null
     private val promptTimestamps = mutableMapOf<String, Long>()
     private var notificationsRequested = false
+    private val prefs by lazy {
+        getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+    }
     private val whitelistPrefs by lazy {
         getSharedPreferences("whitelist_prefs", Context.MODE_PRIVATE)
     }
@@ -158,7 +161,7 @@ class MainActivity : AppCompatActivity() {
         createNotificationChannel()
         ensureNotificationPermission(autoRequest = false)
         refreshPermissionSection()
-        startMonitoringForeground()
+        updateMonitoringState()
         handleIntent(intent)
     }
 
@@ -171,6 +174,7 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         ensureNotificationPermission()
         refreshPermissionSection()
+        updateMonitoringState()
     }
 
     override fun onDestroy() {
@@ -267,6 +271,11 @@ class MainActivity : AppCompatActivity() {
             } else {
                 showWhitelistDialog()
             }
+        }
+
+        binding.toggleNotificationsButton.setOnClickListener {
+            val disable = !isNotificationsDisabled()
+            setNotificationsDisabled(disable)
         }
     }
 
@@ -564,12 +573,14 @@ class MainActivity : AppCompatActivity() {
             notificationsRequested = true
         }
         refreshPermissionSection()
+        updateMonitoringState()
     }
 
     private fun updateNotificationPermissionUi(granted: Boolean) {
         val enabled = granted || hasNotificationPermission()
         notificationsRequested = notificationsRequested || granted
         refreshPermissionSection()
+        updateMonitoringState()
     }
 
     private fun refreshPermissionSection() {
@@ -586,6 +597,7 @@ class MainActivity : AppCompatActivity() {
         binding.whitelistTitle.text = getString(
             if (!anyNeeded) R.string.whitelist_title_active else R.string.whitelist_title_inactive
         )
+        updateToggleButton()
     }
 
     private fun defaultModeSuggestion(): String {
@@ -675,6 +687,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun monitorForeground() {
+        if (isNotificationsDisabled()) {
+            cancelNotification()
+            return
+        }
+        if (!hasNotificationPermission() && !testBypassNotifications) {
+            cancelNotification()
+            return
+        }
         if (!hasUsageAccess()) {
             cancelNotification()
             return
@@ -778,6 +798,39 @@ class MainActivity : AppCompatActivity() {
 
     private fun cancelNotification() {
         NotificationManagerCompat.from(this).cancel(1010)
+    }
+
+    private fun isNotificationsDisabled(): Boolean =
+        prefs.getBoolean("notifications_disabled", false)
+
+    private fun setNotificationsDisabled(disabled: Boolean) {
+        prefs.edit { putBoolean("notifications_disabled", disabled) }
+        if (disabled) {
+            stopMonitoringForeground()
+            cancelNotification()
+        } else {
+            updateMonitoringState()
+        }
+        updateToggleButton()
+    }
+
+    private fun updateToggleButton() {
+        val canShow = hasNotificationPermission() || testBypassNotifications
+        binding.toggleNotificationsButton.isVisible = canShow
+        binding.toggleNotificationsButton.text = getString(
+            if (isNotificationsDisabled()) R.string.enable_notifications else R.string.disable_notifications
+        )
+    }
+
+    private fun updateMonitoringState() {
+        val notificationsOk = hasNotificationPermission() || testBypassNotifications
+        if (isNotificationsDisabled() || !notificationsOk || !hasUsageAccess()) {
+            stopMonitoringForeground()
+            cancelNotification()
+        } else {
+            startMonitoringForeground()
+        }
+        updateToggleButton()
     }
 
     private fun createNotificationChannel() {

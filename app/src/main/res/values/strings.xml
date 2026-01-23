@@ -31,6 +31,8 @@
     <string name="whitelist_subtitle">Приложения из этого списка обычно имеют полный доступ в интернет во время блокировки. При их запуске покажем напоминание вернуться в обычный режим сети.</string>
     <string name="whitelist_empty">Пусто. Добавьте приложение.</string>
     <string name="open_whitelist">Открыть белый список</string>
+    <string name="disable_notifications">Не показывать уведомления</string>
+    <string name="enable_notifications">Показывать уведомления</string>
     <string name="close">Закрыть</string>
     <string name="add_entry">Добавить</string>
     <string name="reset_whitelist">По умолчанию</string>
