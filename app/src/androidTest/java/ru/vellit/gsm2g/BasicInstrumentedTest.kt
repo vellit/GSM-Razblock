@@ -7,6 +7,7 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.rules.ActivityScenarioRule
@@ -20,6 +21,7 @@ import org.json.JSONObject
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
+import org.junit.Assume.assumeTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -107,6 +109,22 @@ class BasicInstrumentedTest {
                     )
                 )
             )
+    }
+
+    @Test
+    fun toggleNotifications_hidden_whenPermissionsMissing() {
+        assumeTrue("Notifications permission applies on API 33+", Build.VERSION.SDK_INT >= 33)
+        val pkg = instrumentation.targetContext.packageName
+        setAppOp(pkg, "GET_USAGE_STATS", "ignore")
+        setAppOp(pkg, "POST_NOTIFICATION", "ignore")
+        activityRule.scenario.onActivity {
+            MainActivity.testBypassUsageAccess = false
+            MainActivity.testBypassNotifications = false
+        }
+        activityRule.scenario.recreate()
+
+        onView(withId(R.id.toggleNotificationsButton))
+            .check(matches(withEffectiveVisibility(androidx.test.espresso.matcher.ViewMatchers.Visibility.GONE)))
     }
 
     @Test
