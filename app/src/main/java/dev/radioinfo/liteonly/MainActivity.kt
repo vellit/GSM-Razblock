@@ -589,18 +589,24 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun refreshPermissionSection() {
-        val needsUsage = !hasUsageAccess()
-        val needsNotifications =
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
-                !hasNotificationPermission() &&
-                !testBypassNotifications
-        val anyNeeded = needsUsage || needsNotifications
+        val usageOk = hasUsageAccess()
+        val notificationsOk = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            hasNotificationPermission() || testBypassNotifications
+        } else {
+            true
+        }
+        val anyNeeded = !usageOk || !notificationsOk
+        val remindersEnabled = !isNotificationsDisabled()
 
         binding.openWhitelistButton.text = getString(
             if (anyNeeded) R.string.activate else R.string.open_whitelist
         )
         binding.whitelistTitle.text = getString(
-            if (!anyNeeded) R.string.whitelist_title_active else R.string.whitelist_title_inactive
+            if (usageOk && notificationsOk && remindersEnabled) {
+                R.string.whitelist_title_active
+            } else {
+                R.string.whitelist_title_inactive
+            }
         )
         updateToggleButton()
     }
@@ -825,6 +831,7 @@ class MainActivity : AppCompatActivity() {
         testTopPackage = null
         lastNotifiedPackageTest = null
         testBypassUsageAccess = false
+        testBypassNotifications = false
         promptTimestamps.clear()
         lastPromptPackage = null
     }
@@ -844,7 +851,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             updateMonitoringState()
         }
-        updateToggleButton()
+        refreshPermissionSection()
     }
 
     private fun updateToggleButton() {

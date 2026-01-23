@@ -38,6 +38,10 @@ class BasicInstrumentedTest {
         ApplicationProvider.getApplicationContext<Context>()
             .getSharedPreferences("whitelist_prefs", Context.MODE_PRIVATE)
     }
+    private val appPrefs by lazy {
+        ApplicationProvider.getApplicationContext<Context>()
+            .getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+    }
 
     @After
     fun tearDown() {
@@ -143,6 +147,26 @@ class BasicInstrumentedTest {
         val openText = context.getString(R.string.open_whitelist)
         onView(withId(R.id.openWhitelistButton))
             .check(matches(withText(containsString(openText))))
+    }
+
+    @Test
+    fun whitelistTitle_reflectsNotificationsDisabled() {
+        activityRule.scenario.onActivity {
+            MainActivity.testBypassUsageAccess = true
+            MainActivity.testBypassNotifications = true
+        }
+
+        appPrefs.edit().putBoolean("notifications_disabled", true).apply()
+        activityRule.scenario.recreate()
+        val inactiveText = context.getString(R.string.whitelist_title_inactive)
+        onView(withId(R.id.whitelistTitle))
+            .check(matches(withText(containsString(inactiveText))))
+
+        appPrefs.edit().putBoolean("notifications_disabled", false).apply()
+        activityRule.scenario.recreate()
+        val activeText = context.getString(R.string.whitelist_title_active)
+        onView(withId(R.id.whitelistTitle))
+            .check(matches(withText(containsString(activeText))))
     }
 
     @Test
