@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">2G разблок</string>
-    <string name="app_description">На экране Phone info в поле &lt;b&gt;«Настроить предпочтительный тип сети»&lt;/b&gt; выберите &lt;b&gt;«GSM only»&lt;/b&gt;. Интернет будет крайне медленный, но это лучше, чем ничего. Чтобы вернуть исходный режим, откройте Phone info снова и выберите прежний пункт (например, &lt;b&gt;%1$s&lt;/b&gt;).</string>
+    <string name="app_description">Нажмите кнопку и выберите &lt;b&gt;%1$s&lt;/b&gt; в пункте &lt;b&gt;%3$s&lt;/b&gt;&lt;br/&gt;Чтобы вернуть прежний режим, снова откройте Phone info и выберите исходный пункт (например, &lt;b&gt;%2$s&lt;/b&gt;).</string>
     <string name="status_trying">Пробуем открыть Phone info…</string>
     <string name="status_opening"></string>
     <string name="status_unavailable">Не получилось открыть Phone info. Производитель мог скрыть этот экран.</string>
@@ -28,12 +28,29 @@
     <string name="whitelist_title">Белый список приложений</string>
     <string name="whitelist_title_active">Белый список приложений (активно)</string>
     <string name="whitelist_title_inactive">Белый список приложений (неактивно)</string>
-    <string name="whitelist_subtitle">Приложения из этого списка обычно имеют полный доступ в интернет во время блокировки. При их запуске покажем напоминание вернуться в обычный режим сети.</string>
+    <string name="whitelist_subtitle">Приложения из этого списка обычно имеют полный доступ в интернет во время блокировок. При их запуске покажем напоминание вернуться в обычный режим сети.</string>
     <string name="whitelist_empty">Пусто. Добавьте приложение.</string>
     <string name="open_whitelist">Открыть белый список</string>
     <string name="disable_notifications">Не показывать уведомления</string>
     <string name="enable_notifications">Показывать уведомления</string>
     <string name="close">Закрыть</string>
+    <string name="help_title">Справка</string>
+    <string name="help_open">Справка</string>
+    <string name="help_content"><![CDATA[
+<b>Зачем</b><br/>
+Открываем системное окно Phone info (как по коду *#*#4636#*#*). Там выбираем 2G/GSM only. Интернет будет крайне медленный, но это лучше, чем ничего.<br/><br/>
+<b>Кнопки</b><br/>
+- Открыть Phone info — перейти к выбору сети.<br/>
+- Белый список — это список Роскомнадзора, сайты или приложения из которого доступны во время блокировок. Можно выбрать приложения, при запуске которых напомним вернуться в полноценный режим связи (4G, 5G). Можно добавлять/удалять, сбрасывать список.<br/>
+- Не показывать / Показывать уведомления — выключить или включить напоминания.<br/><br/>
+<b>Разрешения</b><br/>
+- Статистика использования — понять, какое приложение открыто, чтобы показывать напоминание только для выбранных. Данные остаются на устройстве.<br/>
+- Уведомления — чтобы показать напоминание. Без него напоминаний не будет.<br/><br/>
+<b>Как вернуть обычный режим</b><br/>
+Снова откройте Phone info и выберите исходный пункт (например, LTE/WCDMA/GSM).<br/><br/>
+<b>Важно</b><br/>
+- Некоторые устройства блокируют экран Phone info — тогда его не открыть.<br/>
+]]></string>
     <string name="add_entry">Добавить</string>
     <string name="reset_whitelist">По умолчанию</string>
     <string name="reset_confirm_title">Сбросить список?</string>

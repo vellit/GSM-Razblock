@@ -81,14 +81,19 @@ android {
                     apiLevel = 31
                     systemImageSource = "google_apis"
                 }
-                maybeCreate<com.android.build.api.dsl.ManagedVirtualDevice>("pixel6aApi34").apply {
-                    device = "Pixel 6a"
+                maybeCreate<com.android.build.api.dsl.ManagedVirtualDevice>("pixel7Api34").apply {
+                    device = "Pixel 7"
                     apiLevel = 34
                     systemImageSource = "google_apis"
                 }
-                maybeCreate<com.android.build.api.dsl.ManagedVirtualDevice>("pixelCApi30").apply {
-                    device = "Pixel C"
-                    apiLevel = 30
+                maybeCreate<com.android.build.api.dsl.ManagedVirtualDevice>("pixel7Api35").apply {
+                    device = "Pixel 7"
+                    apiLevel = 35
+                    systemImageSource = "google_apis"
+                }
+                maybeCreate<com.android.build.api.dsl.ManagedVirtualDevice>("pixel7Api36").apply {
+                    device = "Pixel 7"
+                    apiLevel = 36
                     systemImageSource = "google_apis"
                 }
             }
@@ -97,10 +102,11 @@ android {
                     targetDevices.addAll(
                         listOf(
                             devices["pixel4Api30"],
-                            devices["pixel6Api33"],
                             devices["pixel3aApi31"],
-                            devices["pixel6aApi34"],
-                            devices["pixelCApi30"]
+                            devices["pixel6Api33"],
+                            devices["pixel7Api34"],
+                            devices["pixel7Api35"],
+                            devices["pixel7Api36"]
                         )
                     )
                 }

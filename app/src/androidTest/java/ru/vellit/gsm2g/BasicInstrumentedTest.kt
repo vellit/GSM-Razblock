@@ -51,9 +51,13 @@ class BasicInstrumentedTest {
     @Test
     fun appDescription_acceptsModePlaceholder() {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
-        val mode = "TEST_MODE"
-        val description = context.getString(R.string.app_description, mode)
-        assertTrue("Description should contain provided mode", description.contains(mode))
+        val mode2g = "TEST_2G"
+        val modeDefault = "TEST_MODE"
+        val menuLabel = "TEST_MENU"
+        val description = context.getString(R.string.app_description, mode2g, modeDefault, menuLabel)
+        assertTrue("Description should contain provided 2G label", description.contains(mode2g))
+        assertTrue("Description should contain provided default mode", description.contains(modeDefault))
+        assertTrue("Description should contain provided menu label", description.contains(menuLabel))
     }
 
     @Test

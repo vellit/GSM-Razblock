@@ -19,6 +19,7 @@ import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
 import android.widget.Toast
+import java.util.Locale
 import androidx.core.widget.addTextChangedListener
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -146,16 +147,22 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.descriptionText.text = HtmlCompat.fromHtml(
-            getString(R.string.app_description, defaultModeSuggestion()),
+            getString(
+                R.string.app_description,
+                twoGLabelSuggestion(),
+                defaultModeExample(),
+                networkMenuLabelSuggestion()
+            ),
             HtmlCompat.FROM_HTML_MODE_LEGACY
         )
         binding.retryButton.setOnClickListener { openRadioInfo(manual = true) }
         binding.dialerButton.setOnClickListener { openDialerCode() }
         binding.settingsButton.setOnClickListener { openSystemSettings() }
         binding.openRadioInfoButton.setOnClickListener { openRadioInfo(manual = true) }
+        binding.helpLink.setOnClickListener {
+            startActivity(Intent(this, HelpActivity::class.java))
+        }
         binding.privacyLink.setOnClickListener { openPrivacyPolicy() }
-
-        binding.statusText.text = getString(R.string.status_idle)
 
         setupWhitelist()
         createNotificationChannel()
@@ -200,7 +207,6 @@ class MainActivity : AppCompatActivity() {
         for (intent in radioInfoIntents) {
             try {
                 startActivity(intent)
-                binding.statusText.text = getString(R.string.status_opening)
                 binding.fallbackContainer.isVisible = false
                 return
             } catch (_: ActivityNotFoundException) {
@@ -210,7 +216,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        binding.statusText.text = getString(R.string.status_unavailable)
         binding.fallbackContainer.isVisible = true
 
         if (manual) {
@@ -600,6 +605,27 @@ class MainActivity : AppCompatActivity() {
         updateToggleButton()
     }
 
+    private fun twoGLabelSuggestion(): String {
+        val manufacturer = Build.MANUFACTURER?.lowercase().orEmpty()
+        val brand = Build.BRAND?.lowercase().orEmpty()
+
+        fun matches(vararg keys: String): Boolean {
+            return keys.any { key ->
+                manufacturer.contains(key) || brand.contains(key)
+            }
+        }
+
+        return when {
+            matches("xiaomi", "redmi", "poco", "mi", "huawei", "honor", "oppo", "realme", "vivo", "iqoo", "tecno", "infinix") -> "2G only"
+            else -> "GSM only"
+        }
+    }
+
+    private fun networkMenuLabelSuggestion(): String {
+        val lang = Locale.getDefault().language.lowercase(Locale.getDefault())
+        return if (lang == "ru") "Предпочтительный тип сети" else "Set Preferred Network Type"
+    }
+
     private fun defaultModeSuggestion(): String {
         val manufacturer = Build.MANUFACTURER?.lowercase().orEmpty()
         val brand = Build.BRAND?.lowercase().orEmpty()
@@ -633,6 +659,13 @@ class MainActivity : AppCompatActivity() {
             matches("oppo") -> nrAuto
             else -> nrAuto
         }
+    }
+
+    private fun defaultModeExample(): String {
+        return defaultModeSuggestion()
+            .replace(" (авто)", "", ignoreCase = true)
+            .replace("(авто)", "", ignoreCase = true)
+            .trim()
     }
 
     private fun requestNotificationPermission() {
